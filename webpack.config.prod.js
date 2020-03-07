@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const merge = require("webpack-merge");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const common = require("./webpack.config.common");
@@ -16,7 +15,7 @@ module.exports = merge(common, {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: "/public/path/to/"
+              publicPath: "/public/css"
             }
           },
           "css-loader"
@@ -32,15 +31,6 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       // Definitions...
-    }),
-    new HtmlWebpackPlugin({
-      title: "My App",
-      template: "./src/index.html",
-      inject: true,
-      hash: true,
-      templateParameters: {
-        env: "production"
-      }
     }),
     new MiniCssExtractPlugin({})
   ]

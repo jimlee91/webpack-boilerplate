@@ -1,11 +1,23 @@
 const path = require("path");
+const glob = require("glob");
 const webpack = require("webpack");
 const childProcess = require("child_process");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+const generateHTMLPlugins = () =>
+  glob.sync("./src/**/*.html").map(
+    dir =>
+      new HtmlWebpackPlugin({
+        filename: path.basename(dir), // Output
+        template: dir // Input
+      })
+  );
 
 module.exports = {
   entry: {
-    main: "./src/app.js"
+    main: "./src/public/js/app.js"
   },
   output: {
     filename: "[name].js",
@@ -42,6 +54,19 @@ module.exports = {
         * Email: ${childProcess.execSync("git config user.email")}
       `
     }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: "./src/public/css",
+        to: "./assets/css",
+        flatten: true
+      },
+      {
+        from: "./src/public/images",
+        to: "./assets/images",
+        flatten: true
+      }
+    ]),
+    ...generateHTMLPlugins()
   ]
 };
